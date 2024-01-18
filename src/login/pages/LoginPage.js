@@ -17,7 +17,8 @@ import {
 import CryptoJS from "crypto-js";
 
 import { url } from "../../shared/utils/common";
-
+import RenderTextField from "../../shared/components/RenderTextField";
+import RenderButton from "../../shared/components/RenderButton";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -93,7 +94,17 @@ const LoginPage = () => {
             noValidate
             autoComplete="off"
           >
-            <TextField
+            {RenderTextField({
+              id: "email",
+              label: "Email",
+              variant: "outlined",
+              fullWidth: true,
+              value: email,
+              onChange: handleEmailChange,
+              error: emailError,
+              helperText: emailError ? "Invalid email format" : "",
+            })}
+            {/* <TextField
               id="email"
               label="Email"
               variant="outlined"
@@ -102,8 +113,8 @@ const LoginPage = () => {
               onChange={handleEmailChange}
               error={emailError}
               helperText={emailError ? "Invalid email format" : ""}
-            />
-            <TextField
+  /> */}
+            {/* <TextField
               id="password"
               label="Password"
               type={showPassword ? "text" : "password"}
@@ -124,16 +135,31 @@ const LoginPage = () => {
                   </InputAdornment>
                 ),
               }}
-            />
+            /> */}
+            {RenderTextField({
+              id: "password",
+              label: "Password",
+              type: showPassword ? "text" : "password",
+              variant: "outlined",
+              fullWidth: true,
+              value: password,
+              onChange: handlePasswordChange,
+              error: passwordError,
+              helperText: passwordError
+                ? "Password must be at least 6 characters"
+                : "",
+              showPassword: showPassword,
+              handleTogglePasswordVisibility: handleTogglePasswordVisibility,
+            })}
             <div className="flex justify-between">
-              <Button
+              <RenderButton
                 variant="contained"
                 color="primary"
                 onClick={handleLogin}
                 className="mx-10"
               >
                 Login
-              </Button>
+              </RenderButton>
               <Link
                 to="/signup"
                 className="underline text-black p-2 rounded-md hover:scale-105"

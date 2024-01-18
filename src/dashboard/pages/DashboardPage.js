@@ -18,10 +18,14 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { PiUserListBold } from "react-icons/pi";
 import { HiOutlineUserAdd } from "react-icons/hi";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 
 import LoaderImage from "../../shared/components/LoaderImage";
 import LogoutDropDown from "../components/LogoutDropDown";
 import UserList from "../components/UsersList";
+import Dashboard from "@mui/icons-material/Dashboard";
+
+import States from "../../StatesList/pages/States";
 
 const drawerWidth = 240;
 
@@ -91,8 +95,11 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MiniDrawer() {
+  const [selectedButton, setSelectedButton] = React.useState("User List");
   const [isLoading, setIsLoading] = React.useState(false);
   const [showDropDown, setShowDropDown] = React.useState(false);
+  const [showUserList, setShowUserList] = React.useState(true);
+  const [showDashboard, setShowDashboard] = React.useState(false);
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -102,6 +109,17 @@ export default function MiniDrawer() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+  const handleListItemClick = (text) => {
+    setSelectedButton(text);
+    if (text === "User List") {
+      setShowUserList(true);
+      setShowDashboard(false);
+    }
+    if (text === "DashBoard") {
+      setShowUserList(false);
+      setShowDashboard(true);
+    }
   };
 
   return (
@@ -134,9 +152,7 @@ export default function MiniDrawer() {
                     noWrap
                     component="div"
                     className="text-slate-800"
-                  >
-                    Dashboard
-                  </Typography>
+                  ></Typography>
                   <div
                     className="h-12 w-12  bg-purple-200 rounded-3xl border-2 border-purple-600 flex justify-center items-center text-slate-800 hover:border-4 italic font-bold"
                     onClick={() => setShowDropDown(!showDropDown)}
@@ -162,14 +178,18 @@ export default function MiniDrawer() {
               </DrawerHeader>
               <Divider />
               <List>
-                {["User List"].map((text, index) => (
+                {["User List", "DashBoard"].map((text, index) => (
                   <ListItem key={text} disablePadding sx={{ display: "block" }}>
                     <ListItemButton
-                      sx={{
+                      style={{
                         minHeight: 48,
                         justifyContent: open ? "initial" : "center",
-                        px: 2.5,
+                        paddingLeft: 32,
+                        paddingRight: 32,
+                        backgroundColor:
+                          selectedButton === text ? "#e5dbf5" : "transparent",
                       }}
+                      onClick={(event) => handleListItemClick(text)}
                     >
                       <ListItemIcon
                         sx={{
@@ -181,7 +201,7 @@ export default function MiniDrawer() {
                         {index === 0 ? (
                           <PiUserListBold className="h-5 w-5" />
                         ) : (
-                          <HiOutlineUserAdd className="h-5 w-5" />
+                          <DashboardIcon className="h-5 w-5" />
                         )}
                       </ListItemIcon>
                       <ListItemText
@@ -196,7 +216,8 @@ export default function MiniDrawer() {
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
               <DrawerHeader />
               <div className="flex justify-center">
-              <UserList/>
+                {showUserList && <UserList />}
+                {showDashboard && <States />}
               </div>
             </Box>
           </Box>
